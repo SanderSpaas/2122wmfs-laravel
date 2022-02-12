@@ -1,0 +1,17 @@
+{
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "http://localhost:8080",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "FullStackDB",
+            "password": "Azerty123",
+            "username": "root",
+            "database": "2017concerts"
+        }
+    ]
+}
