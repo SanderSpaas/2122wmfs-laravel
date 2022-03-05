@@ -31,7 +31,5 @@
 			<script src="{{ asset('js/skel.min.js')}}"></script>
 			<script src="{{ asset('js/util.js')}}"></script>
             <script src="{{ asset('js/main.js')}}"></script>
-
-
 	</body>
 </html>
