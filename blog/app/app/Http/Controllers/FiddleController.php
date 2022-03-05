@@ -53,13 +53,24 @@ class FiddleController extends BaseController
         dump($blogpostId);
 
         //Alle blogposts die geen commentaren hebben (Eloquent-collecon)
-        $blogpostId = Blogpost::comments()->doesnthave('author')->get();
-        dump($blogpostId);
+        // $blogpostId = Blogpost::comments()->doesnthave('author')->get();
+        // dump($blogpostId);
 
         //Voeg jezelf toe als auteur met een mass assignment (!) method
+        $createAuthor = Author::updateOrCreate([
+            'first_name' => 'Sander',
+            'last_name' => 'Spaas',
+            'email'=> 'sander.spaas@gmail.com',
+            'website' => 'sander.com',
+            'location' => 'Belgium'
+        ]);
+        $createAuthor;
 
-        //Maak een commentaar aan in jouw naam (acve record paern) bij blogpost 1 en sla op
-
-
+        //Maak een commentaar aan in jouw naam (active record patern) bij blogpost 1 en sla op
+        $comment = new Comment;
+        $comment->content = "nou wat een leuke website zeg";
+        $comment->blogpost_id = '2';
+        $comment->author_id = Author::where('first_name', 'Sander')->first()->id;
+        $comment->save();
     }
 }
