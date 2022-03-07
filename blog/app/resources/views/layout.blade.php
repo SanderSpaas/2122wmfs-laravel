@@ -8,7 +8,7 @@
         <meta name="description" content="">
         <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
         <meta name="generator" content="Hugo 0.84.0">
-        <title><a href="{{ url('/') }}"> @yield('title')</a></title>
+        <title>@yield('title')</title>
 
 
 
@@ -57,7 +57,7 @@
                         <a class="link-secondary" href="{{ url('add') }}">Add a blogpost</a>
                     </div>
                     <div class="col-4 text-center">
-                        <a class="blog-header-logo text-dark" href="#">Blogotopia</a>
+                        <a class="blog-header-logo text-dark" href="{{ url('/') }}">Blogotopia</a>
                     </div>
                     <div class="col-4 d-flex justify-content-end align-items-center">
                         <a class="link-secondary" href="{{ url('/') }}" aria-label="Search">

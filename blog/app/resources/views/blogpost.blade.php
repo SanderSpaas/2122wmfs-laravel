@@ -1,18 +1,18 @@
 @extends('layout')
-@section('title', 'Blogotopia | '.$blogpost[0]->title)
+@section('title', 'Blogotopia | ' . $blogpost->title)
 @section('content')
     <main class="container">
         <div class="row g-5">
             <div class="col-md-8">
                 <article class="blog-post">
-                    <h2 class="blog-post-title">{{ $blogpost[0]->title }}</h2>
-                    <p class="blog-post-meta">{{ $blogpost[0]->created_at }} by <a
-                            href="{{ url('author/' . $blogpost[0]->author->id) }}">{{ $blogpost[0]->author->first_name . ' ' . $blogpost[0]->author->last_name }}</a>
+                    <h2 class="blog-post-title">{{ $blogpost->title }}</h2>
+                    <p class="blog-post-meta">{{ $blogpost->created_at }} by <a
+                            href="{{ url('author/' . $blogpost->author->id) }}">{{ $blogpost->author->first_name . ' ' . $blogpost->author->last_name }}</a>
                     </p>
-                    <p><img src="{{ asset('storage/' . $blogpost[0]->image) }}" class="rounded"
-                            alt="{{ $blogpost[0]->title }}">
+                    <p><img src="{{ asset('storage/' . $blogpost->image) }}" class="rounded"
+                            alt="{{ $blogpost->title }}">
                     </p>
-                    <p>{{ $blogpost[0]->content }}</p>
+                    <p>{{ $blogpost->content }}</p>
                     <h3>Comments</h3>
                     @foreach ($commentsBlogpost as $commentBlogpost)
                         <p><strong>{{ $commentBlogpost->first_name . ' ' . $commentBlogpost->last_name }}</strong>

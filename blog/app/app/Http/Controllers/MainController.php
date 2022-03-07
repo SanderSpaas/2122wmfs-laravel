@@ -6,6 +6,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Http\Request;
 use App\Models\Author;
 use App\Models\Blogpost;
 use App\Models\Category;
@@ -18,42 +19,47 @@ class MainController extends BaseController
 
     public function homepage()
     {
-        $blogposts = Blogpost::where('featured', 1)->with('Category')->orderBy('created_at', 'ASC')->paginate(10);
-        dump($blogposts);
+        $blogposts = Blogpost::where('featured', 1)->with('Category')->orderBy('created_at', 'desc')->paginate(10);
+        // dump($blogposts);
         $categories = Category::all();
         return view('homepage', compact('blogposts', 'categories'));
     }
     public function blogpost(int $id)
     {
-        $recentBlogposts = Blogpost::orderBy('created_at', 'ASC')->limit(10)->get();
+        $blogPostCheck = Blogpost::findOrFail($id);
+        $recentBlogposts = Blogpost::orderBy('created_at', 'desc')->limit(10)->get();
         $categories = Category::all();
-        $blogpost = Blogpost::where('id', $id)->with('Author')->orderBy('created_at', 'ASC')->paginate(10);
-        $commentsBlogpost = Blogpost::where('id', $id)->with('Comments')->orderBy('created_at', 'ASC')->paginate(10);
+        $blogpost = Blogpost::where('id', $id)->with('Author')->orderBy('created_at', 'desc')->firstOrFail();
+        // dump($blogpost);
+        $commentsBlogpost = Blogpost::where('id', $id)->with('Comments')->orderBy('created_at', 'desc')->get();
         return view('blogpost', compact('blogpost', 'commentsBlogpost', 'recentBlogposts', 'categories'));
     }
     public function category(int $categoryID)
     {
-        $recentBlogposts = Blogpost::orderBy('created_at', 'ASC')->limit(10)->get();
+        $categoryCheck= Category::findOrFail($categoryID);
+        $recentBlogposts = Blogpost::orderBy('created_at', 'desc')->limit(10)->get();
         $categories = Category::all();
-        $blogposts = Blogpost::where('category_id', $categoryID)->with('Author')->with('Category')->orderBy('created_at', 'ASC')->paginate(10);
-        dump($blogposts);
+        $blogposts = Blogpost::where('category_id', $categoryID)->with('Author')->with('Category')->orderBy('created_at', 'desc')->paginate(10);
+        // dump($blogposts);
         return view('category', compact('blogposts', 'recentBlogposts', 'categories'));
     }
+
+    public function author(int $id)
+    {
+        $recentBlogposts = Blogpost::orderBy('created_at', 'desc')->limit(10)->get();
+        $categories = Category::all();
+        $author = Author::where('id', $id)->firstOrFail();
+        $blogposts = Blogpost::where('author_id', $id)->get();
+        // dump($blogposts);
+        return view('author', compact('blogposts', 'author', 'recentBlogposts', 'categories'));
+    }
+
     public function add()
     {
         $recentBlogposts = Blogpost::orderBy('created_at', 'desc')->limit(10)->get();
         $categories = Category::all();
         $authors = Author::all();
         return view('add', ['recentBlogposts' => $recentBlogposts, 'categories' => $categories, 'authors' => $authors]);
-    }
-    public function author(int $id)
-    {
-        $recentBlogposts = Blogpost::orderBy('created_at', 'desc')->limit(10)->get();
-        $categories = Category::all();
-        $author = Author::where('id', $id)->get();
-        $blogposts = Blogpost::where('author_id', $id)->get();
-        dump($blogposts);
-        return view('author', compact('blogposts', 'author', 'recentBlogposts', 'categories'));
     }
 
     public function store(Request $request)
@@ -71,6 +77,8 @@ class MainController extends BaseController
         }
         if ($request->featured == null) {
             $request['featured'] = '0';
+        }else{
+            $request['featured'] = '1';
         }
         $author = Author::findOrFail($request->author_id);
         $category = Category::findOrFail($request->category_id);
