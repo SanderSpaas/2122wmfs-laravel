@@ -1,3 +1,4 @@
 .DS_Store
 .idea
 labo01/docker/mysql-data/
+blog/docker/mysql-data/

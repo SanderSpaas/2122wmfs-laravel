@@ -29,15 +29,15 @@ class FiddleController extends BaseController
         dump($CommentsCountFeatured);
 
         //De blogpost met id 1 (Blogpost-object)
-        $blogpostId= Blogpost::find(2);
+        $blogpostId= Blogpost::findOrFail(2);
         dump($blogpostId);
 
         //De voornaam van de auteur van blogpost met id 1 (string)
-        $blogpostIdName = Blogpost::find(2)->author()->first()->first_name;
+        $blogpostIdName = Blogpost::findOrFail(2)->author()->first()->first_name;
         dump($blogpostIdName);
 
         //De categorienaam van blogpost met id 1 (string)
-        $blogpostIdName = Blogpost::find(2)->category()->first()->title;
+        $blogpostIdName = Blogpost::findOrFail(2)->category()->first()->title;
         dump($blogpostIdName);
 
         //Alle blogposts waarvan de titel met een A begint, aflopend geordend op creaedatum (Eloquent-collection van Blogpost-objecten)
@@ -53,8 +53,8 @@ class FiddleController extends BaseController
         dump($blogpostId);
 
         //Alle blogposts die geen commentaren hebben (Eloquent-collecon)
-        // $blogpostId = Blogpost::comments()->doesnthave('author')->get();
-        // dump($blogpostId);
+        $blogpostId = Blogpost::doesntHave('Comments')->get();
+        dump($blogpostId);
 
         //Voeg jezelf toe als auteur met een mass assignment (!) method
         $createAuthor = Author::updateOrCreate([
