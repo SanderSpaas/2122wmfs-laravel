@@ -31,7 +31,8 @@ class MainController extends BaseController
         $categories = Category::all();
         $blogpost = Blogpost::where('id', $id)->with('Author')->orderBy('created_at', 'desc')->firstOrFail();
         // dump($blogpost);
-        $commentsBlogpost = Blogpost::where('id', $id)->with('Comments')->orderBy('created_at', 'desc')->get();
+        $commentsBlogpost = Comment::where('blogpost_id', $id)->orderBy('created_at', 'desc')->get();
+        // dump($commentsBlogpost);
         return view('blogpost', compact('blogpost', 'commentsBlogpost', 'recentBlogposts', 'categories'));
     }
     public function category(int $categoryID)
