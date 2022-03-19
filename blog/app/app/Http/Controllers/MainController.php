@@ -11,7 +11,11 @@ use App\Models\Author;
 use App\Models\Blogpost;
 use App\Models\Category;
 use App\Models\Comment;
+use App\Models\Tag;
+use BlogpostTag;
 use Egulias\EmailValidator\Warning\Comment as WarningComment;
+use Facade\Ignition\DumpRecorder\DumpHandler;
+use SebastianBergmann\Environment\Console;
 
 class MainController extends BaseController
 {
@@ -19,7 +23,7 @@ class MainController extends BaseController
 
     public function homepage()
     {
-        $blogposts = Blogpost::where('featured', 1)->with('Category')->orderBy('created_at', 'desc')->paginate(10);
+        $blogposts = Blogpost::where('featured', 1)->with('Category', 'tags')->orderBy('created_at', 'desc')->paginate(10);
         // dump($blogposts);
         $categories = Category::all();
         return view('homepage', compact('blogposts', 'categories'));
@@ -29,18 +33,19 @@ class MainController extends BaseController
         $blogPostCheck = Blogpost::findOrFail($id);
         $recentBlogposts = Blogpost::orderBy('created_at', 'desc')->limit(10)->get();
         $categories = Category::all();
-        $blogpost = Blogpost::where('id', $id)->with('Author')->orderBy('created_at', 'desc')->firstOrFail();
+        $blogpost = Blogpost::where('id', $id)->with('Author', 'tags')->orderBy('created_at', 'desc')->firstOrFail();
         // dump($blogpost);
-        $commentsBlogpost = Comment::where('blogpost_id', $id)->orderBy('created_at', 'desc')->get();
+        $commentsBlogpost = Comment::where('blogpost_id', $id)->with('Author')->orderBy('created_at', 'desc')->get();
         // dump($commentsBlogpost);
         return view('blogpost', compact('blogpost', 'commentsBlogpost', 'recentBlogposts', 'categories'));
     }
+
     public function category(int $categoryID)
     {
-        $categoryCheck= Category::findOrFail($categoryID);
+        $categoryCheck = Category::findOrFail($categoryID);
         $recentBlogposts = Blogpost::orderBy('created_at', 'desc')->limit(10)->get();
         $categories = Category::all();
-        $blogposts = Blogpost::where('category_id', $categoryID)->with('Author')->with('Category')->orderBy('created_at', 'desc')->paginate(10);
+        $blogposts = Blogpost::where('category_id', $categoryID)->with('Author', 'tags', 'Category')->orderBy('created_at', 'desc')->paginate(10);
         // dump($blogposts);
         return view('category', compact('blogposts', 'recentBlogposts', 'categories'));
     }
@@ -50,7 +55,7 @@ class MainController extends BaseController
         $recentBlogposts = Blogpost::orderBy('created_at', 'desc')->limit(10)->get();
         $categories = Category::all();
         $author = Author::where('id', $id)->firstOrFail();
-        $blogposts = Blogpost::where('author_id', $id)->get();
+        $blogposts = Blogpost::where('author_id', $id)->with('tags')->get();
         // dump($blogposts);
         return view('author', compact('blogposts', 'author', 'recentBlogposts', 'categories'));
     }
@@ -65,6 +70,13 @@ class MainController extends BaseController
 
     public function store(Request $request)
     {
+        $tags = $request->tags;
+        var_dump($tags);
+        $tag =  explode(" ", $tags);
+
+        // Voor élk van de tags wordt het volgende uitgevoerd. Indien de tag nog niet bestaat
+        // wordt deze toegevoegd als tag. Anders wordt de reeds bestaande tag opgehaald.
+        // Vervolgens wordt de tag ook gelinkt aan de blogpost in de databank. Commit.
         $request->validate([
             'title' => 'required|unique:blogposts|max:125',
             'content' => 'required',
@@ -78,11 +90,14 @@ class MainController extends BaseController
         }
         if ($request->featured == null) {
             $request['featured'] = '0';
-        }else{
+        } else {
             $request['featured'] = '1';
         }
+
         $author = Author::findOrFail($request->author_id);
         $category = Category::findOrFail($request->category_id);
+
+
         $blogpost = new Blogpost;
         $blogpost->title = $request->title;
         $blogpost->content = $request->input('content');
@@ -91,6 +106,16 @@ class MainController extends BaseController
         $blogpost->category()->associate($category);
         $blogpost->author()->associate($author);
         $blogpost->save();
+
+        foreach ($tag as $t) {
+            // dump($t);
+            // Retrieve tag by name or create it if it doesn't exist...
+            $tag = Tag::firstOrCreate([
+                'title' => $t
+            ]);
+            $blogpost->tags()->attach($tag->id); //attach tag to the post
+        }
+
         return redirect('/');
     }
 }

@@ -2,3 +2,5 @@
 .idea
 labo01/docker/mysql-data/
 blog/docker/mysql-data/
+blog/docker/mysql-data/
+blog/docker/mysql-data/auto.cnf

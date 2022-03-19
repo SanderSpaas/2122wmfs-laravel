@@ -24,6 +24,9 @@
                         <p><img src="{{ asset('storage/' . $Blogpost->image) }}" class="rounded"
                                 alt="{{ $Blogpost->title }}">
                         </p>
+                        @foreach ($Blogpost->tags as $tag)
+                                <span class="badge bg-success">{{ $tag->title }}</span>
+                            @endforeach
                         <p>{{ $Blogpost->content }}</p>
                         <a href="{{ url('blogpost/' . $Blogpost->id) }}">Read comments &hellip;</a>
                     </article>

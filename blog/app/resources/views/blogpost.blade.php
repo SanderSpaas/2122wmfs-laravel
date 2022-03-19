@@ -12,10 +12,14 @@
                     <p><img src="{{ asset('storage/' . $blogpost->image) }}" class="rounded"
                             alt="{{ $blogpost->title }}">
                     </p>
+                    @foreach ($blogpost->tags as $tag)
+                        <span class="badge bg-success">{{ $tag->title }}</span>
+                    @endforeach
                     <p>{{ $blogpost->content }}</p>
+
                     <h3>Comments</h3>
                     @foreach ($commentsBlogpost as $commentBlogpost)
-                        <p><strong>{{ $commentBlogpost->first_name . ' ' . $commentBlogpost->last_name }}</strong>
+                        <p><strong>{{ $commentBlogpost->author->first_name . ' ' . $commentBlogpost->author->last_name }}</strong>
                             &bullet; <em>{{ $commentBlogpost->created_at }}</em>{{ $commentBlogpost->content }}</p>
                     @endforeach
                 </article>

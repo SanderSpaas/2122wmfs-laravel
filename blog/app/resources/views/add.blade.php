@@ -23,8 +23,7 @@
                             </div>
                             <div class="col-12">
                                 <label for="content" class="form-label">Content</label>
-                                <textarea
-                                    class="form-control {{ session()->exists('_old_input.content')? (in_array('content', $errorArray)? 'is-invalid': 'is-valid'): '' }}"
+                                <textarea class="form-control {{ session()->exists('_old_input.content')? (in_array('content', $errorArray)? 'is-invalid': 'is-valid'): '' }}"
                                     id="content" rows="4" name="content">{{ old('content', '') }}</textarea>
                             </div>
                             <div class="col-12">
@@ -76,6 +75,13 @@
                                         @endif
                                     @endforeach
                                 </select>
+                            </div>
+                            <div class="col-12">
+                                <label for="tags" class="form-label">Tags</label>
+                                <input type="text"
+                                    class="form-control {{ session()->exists('_old_input.tags') ? (in_array('tags', $errorArray) ? 'is-invalid' : 'is-valid') : '' }}"
+                                    id="tags" placeholder="" name="tags"
+                                    value="{{ old('tags', '') }}">
                             </div>
                         </div>
                         <hr class="my-4">
