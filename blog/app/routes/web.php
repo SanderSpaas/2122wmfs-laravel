@@ -23,6 +23,6 @@ Route::get('/', [MainController::class, "homepage"]);
 Route::get('category/{category}', [MainController::class, 'category']);
 Route::get('blogpost/{id}', [MainController::class, 'blogpost'])->where(['id' => '[0-9]+']);
 Route::get('author/{id}', [MainController::class, 'author'])->where(['id' => '[0-9]+']);
-
+Route::get('/search', [MainController::class, "search"]);
 Route::get('add', [MainController::class, 'add']);
 Route::post('add', [MainController::class, 'store']);

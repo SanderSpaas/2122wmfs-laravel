@@ -59,7 +59,40 @@ class MainController extends BaseController
         // dump($blogposts);
         return view('author', compact('blogposts', 'author', 'recentBlogposts', 'categories'));
     }
+    public function search(Request $request)
+    {
+        $blogposts = Blogpost::with('Category', 'tags')->orderBy('created_at', 'desc')->paginate(10);
+        $categories = Category::all();
+        $authors = Author::all();
+        dump($request);
 
+        $blogposts = Blogpost::query();
+
+        //search term
+        if ($request->filled('term')) { // might be some other condition e.g. has(), == 0
+            $blogposts = Blogpost::where('title', 'like', '%' . $request->term . '%');
+        }
+
+        //Tags
+        // if ($request->filled('tags')) { // might be some other condition e.g. has(), == 0
+        //     $tagsArray = explode(',', $request->tags);
+        //     $blogposts = $blogposts->whereIn('title', $tagsArray);
+        // }
+
+        //category
+
+        //author
+        $request->author;
+        //blogposts after
+
+        //blogposts before
+
+        //sort by
+
+        //zoeken
+        $blogposts = Blogpost::get();
+        return view('search', compact('blogposts', 'categories', 'authors'));
+    }
     public function add()
     {
         $recentBlogposts = Blogpost::orderBy('created_at', 'desc')->limit(10)->get();
@@ -70,9 +103,8 @@ class MainController extends BaseController
 
     public function store(Request $request)
     {
-        $tags = $request->tags;
-        var_dump($tags);
-        $tag =  explode(" ", $tags);
+        // var_dump($tags);
+        $tag =  explode(" ", $request->tags);
 
         // Voor élk van de tags wordt het volgende uitgevoerd. Indien de tag nog niet bestaat
         // wordt deze toegevoegd als tag. Anders wordt de reeds bestaande tag opgehaald.
