@@ -74,26 +74,9 @@
                     <div class="col-md-6">
                         <label for="sort" class="form-label">Sort by</label>
                         <select class="form-select" id="sort" required="" name="sort">
-                            @if (request('sort') == 'most_recent')
-                                <option value="most_recent" selected="true">most recent</option>
-                                <option value="less_recent">less recent</option>
-                                <option value="title">title</option>
-                            @endif
-                            @if (request('sort') == 'less_recent')
-                                <option value="less_recent" selected="true">less recent</option>
-                                <option value="most_recent">most recent</option>
-                                <option value="title">title</option>
-                            @endif
-                            @if (request('sort') == 'title')
-                                <option value="title" selected="true">title</option>
-                                <option value="most_recent">most recent</option>
-                                <option value="less_recent">less recent</option>
-                            @endif
-                            @if (request('sort') == '')
-                                <option value="title">title</option>
-                                <option value="most_recent">most recent</option>
-                                <option value="less_recent">less recent</option>
-                            @endif
+                            <option value="title" @if (request('sort') == 'title') selected @endif>title</option>
+                            <option value="most_recent" @if (request('sort') == 'most_recent') selected @endif>most recent</option>
+                            <option value="less_recent" @if (request('sort') == 'less_recent') selected @endif>less recent</option>
                         </select>
                     </div>
 
@@ -121,20 +104,20 @@
                             <strong class="d-inline-block mb-2 category-7">{{ $blogpost->category->title }}</strong>
                             <h3 class="mb-0">{{ $blogpost->title }}</h3>
                             <div class="mb-1 text-muted">{{ $blogpost->created_at }}@foreach ($blogpost->tags as $tag)
-                                    <span class="badge bg-success">{{ $tag->title }}</span>
-                                @endforeach
-                            </div>
-                            <p class="card-text mb-auto">{{ $blogpost->content }} &hellip;</p>
-                            <a href="{{ url('blogpost/' . $blogpost->id) }}" class="stretched-link">Continue reading</a>
-                        </div>
-                        <div class="col-auto d-none d-lg-block img-container">
-                            <img src="{{ url('storage/' . $blogpost->image) }}" alt="{{ $blogpost->title }}" />
-                        </div>
+                                    <span class="badge bg-success">{{ $tag->title }}</span> @endforeach
+                                </div>
+                                <p class="card-text mb-auto">{{ $blogpost->content }} &hellip;</p>
+                                <a href="{{ url('blogpost/' . $blogpost->id) }}" class="stretched-link">Continue
+                                    reading</a>
+                    </div>
+                    <div class="col-auto d-none d-lg-block img-container">
+                        <img src="{{ url('storage/' . $blogpost->image) }}" alt="{{ $blogpost->title }}" />
                     </div>
                 </div>
-            @endforeach
-            <nav>
-                <ul class="pagination justify-content-center">
+        </div>
+        @endforeach
+        <nav>
+            {{-- <ul class="pagination justify-content-center">
                     <li class="page-item disabled" aria-disabled="true" aria-label="&laquo; Previous">
                         <span class="page-link" aria-hidden="true">Previous</span>
                     </li>
@@ -155,8 +138,11 @@
                         <a class="page-link" href="search?term=s&amp;sort=most_recent&amp;page=2#results" rel="next"
                             aria-label="Next &raquo;">Next</a>
                     </li>
-                </ul>
-            </nav>
+                </ul> --}}
+            <div class="d-flex justify-content-center">
+                {!! $blogposts->links() !!}
+            </div>
+        </nav>
 
         </div>
 

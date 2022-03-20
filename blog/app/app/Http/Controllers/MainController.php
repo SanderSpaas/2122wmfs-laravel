@@ -61,36 +61,75 @@ class MainController extends BaseController
     }
     public function search(Request $request)
     {
-        $blogposts = Blogpost::with('Category', 'tags')->orderBy('created_at', 'desc')->paginate(10);
+
         $categories = Category::all();
         $authors = Author::all();
-        dump($request);
+        // dump($request);
 
-        $blogposts = Blogpost::query();
+        $terms = explode(" ", strtolower($request->term));
+        $tags = explode(" ", strtolower($request->tags));
+        $blogposts = Blogpost::paginate(6);
 
-        //search term
-        if ($request->filled('term')) { // might be some other condition e.g. has(), == 0
-            $blogposts = Blogpost::where('title', 'like', '%' . $request->term . '%');
+        if (count($request->all()) > 0) {
+            $blogposts = Blogpost::query();
+
+            //search term
+            if ($terms[0] !== "") {
+                if ($request->filled('term')) {
+                    $termArray = explode(',', $request->term);
+                    for ($i = 0; $i < count($termArray); $i++) {
+                        $blogposts->where('title', 'like', '%' . $termArray[$i] . '%');
+                    }
+                }
+            }
+
+            //tags
+            if ($tags[0] !== "") {
+                dump($tags);
+                $blogposts = $blogposts->whereHas('tags', function ($query) use ($tags) {
+                    if (count($tags) >= 1) {
+                        $query->where('tags.title', 'like', '%' . $tags[0] . '%');
+                        for ($i = 1; $i < count($tags); $i++) {
+                            $query->orwhere('tags.title', 'like', '%' . $tags[$i] . '%');
+                        }
+                    } else {
+                        for ($i = 0; $i < count($tags); $i++) {
+                            $query->where('tags.title', 'like', '%' . $tags[$i] . '%');
+                        }
+                    }
+                });
+            }
+
+            //author
+            if ($request->filled('author_id')) {
+                $blogposts->where('author_id', $request->author_id);
+            }
+            //category
+            if ($request->filled('category_id')) {
+                $blogposts->where('category_id', $request->category_id);
+            }
+
+            //blogposts after
+            if ($request->filled('after')) {
+                $blogposts->where('created_at', '>', $request->after);
+            }
+            //blogposts before
+            if ($request->filled('before')) {
+                $blogposts->where('created_at', '<', $request->before);
+            }
+
+            //sort by
+            if ($request->sort == 'title') {
+                $blogposts->orderBy('title');
+            } else if ($request->sort == 'most_recent') {
+                $blogposts->orderBy('created_at', 'desc');
+            } else {
+                $blogposts->orderBy('created_at');
+            }
+
+            //zoeken
+            $blogposts = $blogposts->paginate(6)->withQueryString();
         }
-
-        //Tags
-        // if ($request->filled('tags')) { // might be some other condition e.g. has(), == 0
-        //     $tagsArray = explode(',', $request->tags);
-        //     $blogposts = $blogposts->whereIn('title', $tagsArray);
-        // }
-
-        //category
-
-        //author
-        $request->author;
-        //blogposts after
-
-        //blogposts before
-
-        //sort by
-
-        //zoeken
-        $blogposts = Blogpost::get();
         return view('search', compact('blogposts', 'categories', 'authors'));
     }
     public function add()
