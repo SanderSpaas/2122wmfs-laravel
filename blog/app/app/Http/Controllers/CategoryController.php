@@ -46,13 +46,14 @@ class CategoryController extends Controller
         $category->save();
         return response()->json(['message' => 'The catagory: ' . $request->title . ' has been created'], 201);
     }
-    
+
     public function deleteCategory(Request $request)
     {
         if (!Category::find($request->id)) {
             return response()->json(['message' => 'The category id: ' . $request->id . ' could not be found'], 404);
         } else {
-            return Category::destroy($request->id);
+            Category::destroy($request->id);
+            return response()->json(['message' => 'The id: ' . $request->id . ' has been deleted'], 201);
         }
     }
 }

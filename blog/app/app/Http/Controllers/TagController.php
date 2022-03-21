@@ -35,13 +35,14 @@ class TagController extends Controller
         $tag->save();
         return response()->json(['message' => 'The tag: ' . $request->title . ' has been created'], 201);
     }
-    
+
     public function deleteTag(Request $request)
     {
         if (!Tag::find($request->id)) {
             return response()->json(['message' => 'The tag id: ' . $request->id . ' could not be found'], 404);
         } else {
-            return Tag::destroy($request->id);
+            Tag::destroy($request->id);
+            return response()->json(['message' => 'The id: ' . $request->id . ' has been deleted'], 201);
         }
     }
 }

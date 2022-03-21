@@ -50,7 +50,8 @@ class AuthorController extends Controller
         if (!Author::find($request->id)) {
             return response()->json(['message' => 'The author id: ' . $request->id . ' could not be found'], 404);
         } else {
-            return Author::destroy($request->id);
+            Author::destroy($request->id);
+            return response()->json(['message' => 'The id: ' . $request->id . ' has been deleted'], 201);
         }
     }
 }

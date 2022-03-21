@@ -34,7 +34,8 @@ class CommentController extends Controller
         if (!Comment::find($request->id)) {
             return response()->json(['message' => 'The comment id: ' . $request->id . ' could not be found'], 404);
         } else {
-            return Comment::destroy($request->id);
+            Comment::destroy($request->id);
+            return response()->json(['message' => 'The id: ' . $request->id . ' has been deleted'], 201);
         }
     }
 }

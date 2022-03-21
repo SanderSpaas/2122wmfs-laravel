@@ -64,7 +64,8 @@ class BlogpostController extends Controller
         if (!Blogpost::find($request->id)) {
             return response()->json(['message' => 'The blogpost id: ' . $request->id . ' could not be found'], 404);
         } else {
-            return Blogpost::destroy($request->id);
+            Blogpost::destroy($request->id);
+            return response()->json(['message' => 'The id: ' . $request->id . ' has been deleted'], 201);
         }
     }
 
