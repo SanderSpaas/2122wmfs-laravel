@@ -68,7 +68,7 @@ class MainController extends BaseController
 
         $terms = explode(" ", strtolower($request->term));
         $tags = explode(" ", strtolower($request->tags));
-        $blogposts = Blogpost::paginate(6);
+        $blogposts = Blogpost::orderBy('title')->paginate(6);
 
         if (count($request->all()) > 0) {
             $blogposts = Blogpost::query();
@@ -85,7 +85,7 @@ class MainController extends BaseController
 
             //tags
             if ($tags[0] !== "") {
-                dump($tags);
+                // dump($tags);
                 $blogposts = $blogposts->whereHas('tags', function ($query) use ($tags) {
                     if (count($tags) >= 1) {
                         $query->where('tags.title', 'like', '%' . $tags[0] . '%');

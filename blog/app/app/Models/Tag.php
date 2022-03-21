@@ -9,7 +9,7 @@ class Tag extends Model
 {
     use HasFactory;
     protected $fillable = ['title'];
-    protected $hidden = ['id', 'created_at'];
+    protected $hidden = ['id', 'created_at','pivot'];
     public function blogposts()
     {
         return $this->belongsToMany(Blogpost::class);
