@@ -17,15 +17,16 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::get('/fiddles', [FiddleController::class, "fiddles"])->middleware('guest');
+Route::get('/fiddles', [FiddleController::class, "fiddles"]);
 
-Route::get('/', [MainController::class, "homepage"])->middleware('guest');
-Route::get('category/{category}', [MainController::class, 'category'])->middleware('guest');
-Route::get('blogpost/{id}', [MainController::class, 'blogpost'])->where(['id' => '[0-9]+'])->middleware('guest');
-Route::get('author/{id}', [MainController::class, 'author'])->where(['id' => '[0-9]+'])->middleware('guest');
-Route::get('/search', [MainController::class, "search"])->middleware('guest');
+Route::get('/', [MainController::class, "homepage"]);
+Route::get('category/{category}', [MainController::class, 'category']);
+Route::get('blogpost/{id}', [MainController::class, 'blogpost'])->where(['id' => '[0-9]+']);
+Route::post('blogpost/{id}/delete', [MainController::class, 'deleteBlogpost'])->where(['id' => '[0-9]+'])->middleware('auth');
+Route::get('author/{id}', [MainController::class, 'author'])->where(['id' => '[0-9]+']);
+Route::get('/search', [MainController::class, "search"]);
 Route::get('add', [MainController::class, 'add'])->middleware('auth');
 Route::post('add', [MainController::class, 'store'])->middleware('auth');
-
+Route::get('logout', '\App\Http\Controllers\Auth\AuthenticatedSessionController@destroy')->middleware('auth');
 
 require __DIR__.'/auth.php';

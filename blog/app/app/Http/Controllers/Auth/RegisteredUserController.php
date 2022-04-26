@@ -10,7 +10,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
-
+use App\Models\Author;
+use App\Models\Blogpost;
+use App\Models\Category;
+use App\Models\Comment;
+use App\Models\Tag;
 class RegisteredUserController extends Controller
 {
     /**
@@ -20,7 +24,11 @@ class RegisteredUserController extends Controller
      */
     public function create()
     {
-        return view('auth.register');
+        $blogposts = Blogpost::where('featured', 1)->with('Category', 'tags')->orderBy('created_at', 'desc')->paginate(10);
+        // dump($blogposts);
+        $categories = Category::all();
+        $recentBlogposts = Blogpost::orderBy('created_at', 'desc')->limit(10)->get();
+        return view('register', compact('blogposts', 'categories', 'recentBlogposts'));
     }
 
     /**
@@ -35,19 +43,23 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:authors'],
+            'location' => ['required', 'string', 'max:255'],
+            'website' => ['required', 'string', 'max:255', 'unique:authors'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
+        $author = Author::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'location' => $request->location,
+            'website' => $request->website,
         ]);
 
-        event(new Registered($user));
+        event(new Registered($author));
 
-        Auth::login($user);
+        Auth::login($author);
 
         return redirect(RouteServiceProvider::HOME);
     }

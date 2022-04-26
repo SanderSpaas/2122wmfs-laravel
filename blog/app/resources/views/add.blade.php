@@ -61,20 +61,9 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="author" class="form-label">Author</label>
-                                <select
-                                    class="form-select {{ session()->exists('_old_input.author_id')? (in_array('author_id', $errorArray)? 'is-invalid': 'is-valid'): '' }}"
-                                    id="author" required="" name="author_id">
-                                    <option value="">Choose...</option>
-                                    @foreach ($authors as $choseAuthor)
-                                        @if (old('author_id') == $choseAuthor->id)
-                                            <option value="{{ $choseAuthor->id }}" selected>
-                                                {{ $choseAuthor->first_name . ' ' . $choseAuthor->last_name }}</option>
-                                        @else
-                                            <option value="{{ $choseAuthor->id }}">
-                                                {{ $choseAuthor->first_name . ' ' . $choseAuthor->last_name }}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
+
+                                    <p>{{Auth::user()->first_name . ' ' . Auth::user()->last_name ;}}</p>
+
                             </div>
                             <div class="col-12">
                                 <label for="tags" class="form-label">Tags</label>

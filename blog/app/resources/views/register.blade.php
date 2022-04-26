@@ -1,9 +1,9 @@
-@extends('twocolumn')
+@extends('layout')
 
 @section('title', 'Blogotopia | Sign up' )
 
 
-@section('left-content')
+@section('content')
     <div class="p-4 mb-3 bg-light rounded">
             <h4 class="mb-3">Sign up</h4>
             <form class="needs-validation" novalidate="" method="post" action="{{ url('register') }}">

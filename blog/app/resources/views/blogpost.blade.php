@@ -15,6 +15,13 @@
                     @foreach ($blogpost->tags as $tag)
                         <span class="badge bg-success">{{ $tag->title }}</span>
                     @endforeach
+
+                    @if ($blogpost->author->id == Auth::id())
+                        <form method="POST" action="{{ url('blogpost/' . $blogpost->id . '/delete') }}">
+                            @csrf
+                            <button class="btn btn-danger">Verwijderen</button>
+                        </form>
+                    @endif
                     <p>{{ $blogpost->content }}</p>
 
                     <h3>Comments</h3>

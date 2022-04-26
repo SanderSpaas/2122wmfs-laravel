@@ -70,7 +70,7 @@
                             </svg>
                         </a>
                         @guest
-                            <a class="btn btn-sm btn-outline-secondary" href="{{ url('signUp') }}">Sign up</a>
+                            <a class="btn btn-sm btn-outline-secondary" href="{{ url('register') }}">Sign up</a>
                             <a class="btn btn-sm btn-outline-secondary" href="{{ url('login') }}">Login</a>
                         @endguest
                         @auth

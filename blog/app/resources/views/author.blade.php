@@ -25,8 +25,14 @@
                                 alt="{{ $Blogpost->title }}">
                         </p>
                         @foreach ($Blogpost->tags as $tag)
-                                <span class="badge bg-success">{{ $tag->title }}</span>
-                            @endforeach
+                            <span class="badge bg-success">{{ $tag->title }}</span>
+                        @endforeach
+                        @if ($blogposts[0]->author->id == Auth::id())
+                        <form method="POST" action="{{ url('blogpost/' . $blogposts[0]->id . '/delete') }}">
+                            @csrf
+                            <button class="btn btn-danger">Verwijderen</button>
+                        </form>
+                    @endif
                         <p>{{ $Blogpost->content }}</p>
                         <a href="{{ url('blogpost/' . $Blogpost->id) }}">Read comments &hellip;</a>
                     </article>

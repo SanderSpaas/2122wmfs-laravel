@@ -16,6 +16,7 @@ use BlogpostTag;
 use Egulias\EmailValidator\Warning\Comment as WarningComment;
 use Facade\Ignition\DumpRecorder\DumpHandler;
 use SebastianBergmann\Environment\Console;
+use Illuminate\Support\Facades\Auth;
 
 class MainController extends BaseController
 {
@@ -39,6 +40,14 @@ class MainController extends BaseController
         // dump($commentsBlogpost);
         return view('blogpost', compact('blogpost', 'commentsBlogpost', 'recentBlogposts', 'categories'));
     }
+
+    public function deleteBlogpost(int $id)
+    {
+        // $this->authorize('delete', Auth::id(), $id);
+        Blogpost::findOrFail($id)->delete();
+        return redirect('author/' . Auth::id());
+    }
+
 
     public function category(int $categoryID)
     {
