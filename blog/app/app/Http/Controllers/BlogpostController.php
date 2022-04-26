@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Author;
 use App\Models\Blogpost;
 use App\Models\Category;
@@ -53,7 +54,7 @@ class BlogpostController extends Controller
             $blogpost->content = $request->content;
             $blogpost->image = $request->image;
             $blogpost->featured = $request->featured;
-            $blogpost->author_id = $request->author_id;
+            $blogpost->author_id = Auth::id();
             $blogpost->category_id = $request->category_id;
             $blogpost->save();
         }
