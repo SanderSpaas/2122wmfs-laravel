@@ -24,11 +24,9 @@ class RegisteredUserController extends Controller
      */
     public function create()
     {
-        $blogposts = Blogpost::where('featured', 1)->with('Category', 'tags')->orderBy('created_at', 'desc')->paginate(10);
         // dump($blogposts);
         $categories = Category::all();
-        $recentBlogposts = Blogpost::orderBy('created_at', 'desc')->limit(10)->get();
-        return view('register', compact('blogposts', 'categories', 'recentBlogposts'));
+        return view('register', compact('categories'));
     }
 
     /**
@@ -42,7 +40,8 @@ class RegisteredUserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:authors'],
             'location' => ['required', 'string', 'max:255'],
             'website' => ['required', 'string', 'max:255', 'unique:authors'],
@@ -50,7 +49,8 @@ class RegisteredUserController extends Controller
         ]);
 
         $author = Author::create([
-            'name' => $request->name,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'location' => $request->location,

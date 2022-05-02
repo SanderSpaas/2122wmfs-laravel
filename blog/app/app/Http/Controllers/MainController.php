@@ -43,11 +43,16 @@ class MainController extends BaseController
 
     public function deleteBlogpost(int $id)
     {
-        // $this->authorize('delete', Auth::id(), $id);
-        Blogpost::findOrFail($id)->delete();
-        return redirect('author/' . Auth::id());
+        if (Blogpost::find($id)->get()->author_id === Auth::id()) {
+            Blogpost::findOrFail($id)->delete();
+            return redirect('author/' . Auth::id());
+        } else {
+            $blogposts = Blogpost::where('featured', 1)->with('Category', 'tags')->orderBy('created_at', 'desc')->paginate(10);
+            // dump($blogposts);
+            $categories = Category::all();
+            return view('homepage', compact('blogposts', 'categories'));
+        }
     }
-
 
     public function category(int $categoryID)
     {

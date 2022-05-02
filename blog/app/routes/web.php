@@ -28,5 +28,7 @@ Route::get('/search', [MainController::class, "search"]);
 Route::get('add', [MainController::class, 'add'])->middleware('auth');
 Route::post('add', [MainController::class, 'store'])->middleware('auth');
 Route::get('logout', '\App\Http\Controllers\Auth\AuthenticatedSessionController@destroy')->middleware('auth');
+Route::get('register', '\App\Http\Controllers\Auth\RegisteredUserController@create')->middleware('guest');;
+Route::post('register', '\App\Http\Controllers\Auth\RegisteredUserController@register')->middleware('guest');;
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

@@ -13,7 +13,7 @@ class Author extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
     protected $fillable = ['first_name', 'last_name', 'email', 'website', 'location', 'updated_at', 'password', 'rememberTokem'];
-    protected $hidden = ['id', 'created_at'];
+    protected $hidden = ['id', 'created_at', 'password'];
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
